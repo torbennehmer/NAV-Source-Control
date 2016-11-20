@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using log4net;
 
-namespace NAVSCM
+namespace NAVSCM.TestHost
 {
     class Program
     {
@@ -17,10 +17,6 @@ namespace NAVSCM
 
             log.Info("Starting up...");
 
-            log.Debug("Debug");
-            log.Warn("Warn");
-            log.Error("Error");
-            log.Fatal("Fatal");
 
             log.Info("Shutting down...");
 
