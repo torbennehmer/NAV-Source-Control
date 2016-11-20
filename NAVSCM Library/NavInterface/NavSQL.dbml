@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="TERRABIT 2015 DEV" EntityNamespace="NavScm.NavInterface" ContextNamespace="NavScm.NavInterface" Class="NavSQLDataContext" Serialization="Unidirectional" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="dbo.Object" Member="NavObject">
+    <Type Name="NavObject">
+      <Column Name="timestamp" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" IsReadOnly="true" CanBeNull="false" IsVersion="true" />
+      <Column Name="Type" Type="System.Int32" DbType="Int NOT NULL" IsReadOnly="true" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="[Company Name]" Member="Company_Name" Type="System.String" DbType="VarChar(30) NOT NULL" IsReadOnly="true" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsReadOnly="true" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(30) NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="Modified" Type="System.Byte" DbType="TinyInt NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="Compiled" Type="System.Byte" DbType="TinyInt NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="Date" Type="System.DateTime" DbType="DateTime NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="Time" Type="System.DateTime" DbType="DateTime NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="[Version List]" Member="Version_List" Type="System.String" DbType="VarChar(248) NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="Locked" Type="System.Byte" DbType="TinyInt NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="[Locked By]" Member="Locked_By" Type="System.String" DbType="VarChar(132) NOT NULL" IsReadOnly="true" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>
