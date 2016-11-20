@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAV Source Control Test Host", "NAV Source Control Test Host\NAV Source Control Test Host.csproj", "{E0BED7B8-729A-4AA4-83A3-2F0EC569728E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAVSCM Library", "NAVSCM Library\NAVSCM Library.csproj", "{46DB932E-45D1-4783-A8BF-CE5333B3F8F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavScm Library", "NAVSCM Library\NavScm Library.csproj", "{46DB932E-45D1-4783-A8BF-CE5333B3F8F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

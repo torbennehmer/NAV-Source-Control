@@ -7,7 +7,7 @@
     <ProjectGuid>{E0BED7B8-729A-4AA4-83A3-2F0EC569728E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NAVSCM.TestHost</RootNamespace>
+    <RootNamespace>NavScm.TestHost</RootNamespace>
     <AssemblyName>NAV Source Control Test Host</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -73,9 +73,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NAVSCM Library\NAVSCM Library.csproj">
+    <ProjectReference Include="..\NAVSCM Library\NavScm Library.csproj">
       <Project>{46db932e-45d1-4783-a8bf-ce5333b3f8f9}</Project>
-      <Name>NAVSCM Library</Name>
+      <Name>NavScm Library</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
