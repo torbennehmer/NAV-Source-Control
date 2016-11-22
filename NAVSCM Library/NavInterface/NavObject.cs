@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics.Contracts;
 
 namespace NavScm.NavInterface
 {
@@ -43,15 +44,21 @@ namespace NavScm.NavInterface
     /// <seealso cref="NavObjectType"/>
     partial class NavObject : IEquatable<NavObject>, IComparable, IComparable<NavObject>
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(NavObject));
+
         /// <summary>
         /// Validate restrictions on supported objects as outlined in the class description.
         /// </summary>
         partial void OnLoaded()
         {
+            Contract.Requires(Company_Name.Length == 0);
+            Contract.Requires(Type >= 0  && Type <= 9 && Type != 2 && Type != 4 );
+            /*
             if (Company_Name.Length > 0)
                 throw new InvalidOperationException($"The object {CacheKey} holds a variant with the company name {Company_Name}, which is unsupported");
             if (Type < 0 || Type == 2 || Type == 4 || Type > 9)
                 throw new InvalidOperationException($"The object type of {CacheKey} is unsupported");
+            */
         }
 
         /// <summary>
@@ -75,20 +82,15 @@ namespace NavScm.NavInterface
         /// </summary>
         public string CacheKey
         {
-            get {
-                return $"{Type}.{ID}";
-            }   
+            get { return $"{Type}.{ID}"; }   
         }
 
         /// <summary>
         /// Converts the Date and Time fields to a combined Date/Time value.
         /// </summary>
-        public DateTime Modified
+        public DateTime ModifiedDate
         {
-            get
-            {
-                return Date.Add(Time.TimeOfDay);
-            }
+            get { return Date.Add(Time.TimeOfDay); }
         }
 
         /// <summary>
