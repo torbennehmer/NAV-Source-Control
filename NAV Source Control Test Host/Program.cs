@@ -44,7 +44,7 @@ namespace NavScm.TestHost
                 log.DebugFormat("Row {6}/{7}: Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
                     o.Type, o.ID, o.Name, o.Date.ToShortDateString(), o.Time.ToShortTimeString(), o.Version_List, i++, count);
 
-                foundObjects.Add(String.Format("{0}.{1}", o.Type, o.ID), o);
+                foundObjects.Add(o.CacheKey, o);
             }
 
             log.InfoFormat("Collection has {0} entries, writing to cache.xml", foundObjects.Count);
