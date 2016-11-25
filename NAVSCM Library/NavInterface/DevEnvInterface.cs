@@ -19,7 +19,7 @@ namespace NavScm.NavInterface
     /// <para>Currently, the interface expects to be able to access the database using
     /// NTLM Single Sign on. SQL user/pass authentication is not supported.</para>
     /// </remarks>
-    class DevEnvInterface
+    public class DevEnvInterface
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(DevEnvInterface));
 
@@ -31,23 +31,23 @@ namespace NavScm.NavInterface
             /// <summary>
             /// The exit code of finsql.exe. So far this is always 0, tests pending.
             /// </summary>
-            public int ExitCode;
+            public readonly int ExitCode;
 
             /// <summary>
             /// True, if the command executed successfully.
             /// </summary>
-            public bool Success;
+            public readonly bool Success;
 
             /// <summary>
             /// The output produced by the command, as written to navcommandresult.txt by finsql.exe.
             /// </summary>
-            public string CommandOutput;
+            public readonly string CommandOutput;
 
             /// <summary>
             /// The errormessage if any, as written to the log file passed to finsql.exe. Empty, if
             /// the call was successful.
             /// </summary>
-            public string ErrorMessage;
+            public readonly string ErrorMessage;
 
             /// <summary>
             /// Constructs the whole object.
@@ -117,9 +117,6 @@ namespace NavScm.NavInterface
         /// <returns>The full path to the created directory, which is empty.</returns>
         protected string GetNewTempDirectory()
         {
-            Contract.Ensures(Directory.Exists(Contract.Result<string>()));
-            Contract.Ensures(! Directory.EnumerateFileSystemEntries(Contract.Result<string>()).Any());
-
             // Try a few times. Uniqueness should not be a problem, as GetRandomFileName is cryptographically strong,
             // but beware of other errors e.g. during director creation.
             // Note, that in theory an race condition is possible here in case GetRandomFileName doesn't behave.
@@ -145,6 +142,8 @@ namespace NavScm.NavInterface
                     log.Error("GetNewTempDirectory: Trying again nevertheless...");
                     continue;
                 }
+
+                Contract.Assert(!Directory.EnumerateFileSystemEntries(tempPath).Any());
 
                 return tempPath;
             }
@@ -173,7 +172,6 @@ namespace NavScm.NavInterface
             Contract.Requires(command != "");
 
             string tempPath = GetNewTempDirectory();
-            Contract.Ensures(!Directory.Exists(tempPath));
 
             string errorLog = $"{tempPath}\\error.log";
             string commandOutput = $"{tempPath}\\navcommandresult.txt";
@@ -184,7 +182,6 @@ namespace NavScm.NavInterface
 
             // Execute finsql.exe and wait for its exit...
             Process process = new Process();
-            Contract.Ensures(process.HasExited);
 
             process.StartInfo.FileName = DevEnvPath;
             process.StartInfo.Arguments = fullArguments;
@@ -207,18 +204,22 @@ namespace NavScm.NavInterface
                 log.Debug($"ExecuteCommand: Execution took: {sw.Elapsed}");
             }
 
-            // Parse and store finsql.exe result information
+            // Parse and store finsql.exe result information, be aware, that we are not getting
+            // Unicode back from finsql.exe, this is CP850 instead. Interesting, all this in the 
+            // current millenia, as CP850 was introduced 1987 with DOS 3.3... Not to mention that
+            // the current windows ANSI Encoding is ignored as well. (Checked up to NAV 2015).
+            var finsqlEncoding = Encoding.GetEncoding(850);
             CommandResult result;
             if (File.Exists(errorLog))
             {
-                result = new CommandResult(process.ExitCode, false, File.ReadAllText(commandOutput), File.ReadAllText(errorLog));
+                result = new CommandResult(process.ExitCode, false, File.ReadAllText(commandOutput, finsqlEncoding), File.ReadAllText(errorLog, finsqlEncoding));
                 log.ErrorFormat("ExecuteCommand: Command failed with: {0}", result.ErrorMessage);
                 log.DebugFormat("ExecuteCommand: Command result: {0}", result.CommandOutput);
                 log.DebugFormat("ExecuteCommand: finsql.exe finished with exit code {0}", process.ExitCode);
             }
             else
             {
-                result = new CommandResult(process.ExitCode, true, File.ReadAllText(commandOutput), "");
+                result = new CommandResult(process.ExitCode, true, File.ReadAllText(commandOutput, finsqlEncoding), "");
                 log.Info("ExecuteCommand: Command executed successfully");
                 log.DebugFormat("ExecuteCommand: Command result: {0}", result.CommandOutput);
             }
@@ -231,19 +232,40 @@ namespace NavScm.NavInterface
             }
             Directory.Delete(tempPath);
 
+            Contract.Assert(!Directory.Exists(tempPath));
+            Contract.Assume(process.HasExited);
+
             return result;
         }
 
         /// <summary>
         /// Exports a given NAV object to disk.
         /// </summary>
+        /// <remarks>
+        /// <para>The file name must end with .txt, as finsql.exe deduces the export format from the destiation files 
+        /// extension (crap). We have no other option here as to play by these rules.</para>
+        /// <para>Be aware, that NAV uses some strange mix of CP850 and CP1252 to encode the text files, 
+        /// this is mean stuff here. The call does not try to convert this into something more sensible
+        /// at this point, especially since the IDE won't be able to handle this properly if you have to
+        /// work with the files manually. Checked with NAV 2015, YMMV.</para></remarks>
+        /// <para>Check http://forum.mibuso.com/discussion/37078/encoding-of-exported-navision-objects-txt-files 
+        /// for further details about this.</para>
         /// <param name="obj">The NAV object as taken from the SQL database or from the cache (doesn't matter).</param>
-        /// <param name="destinationFileName">The name of the destination file. The system ensures, that the file
-        /// ends with .txt, as finsql.exe deduces the export format from the destiation files extension (crap).</param>
+        /// <param name="destinationFileName">The name of the destination file. The file name must end with .txt.</param>
         public void Export(NavObject obj, string destinationFileName)
         {
             Contract.Requires(obj != null);
             Contract.Requires(destinationFileName != "");
+            Contract.Requires(Path.GetExtension(destinationFileName) == ".txt");
+
+            // TODO: Skip Unlicensed objects?
+            string command = $"Command=ExportObjects,File=\"{destinationFileName}\",Filter=\"{obj.GetFilter()}\"";
+            log.DebugFormat("Export: Build command string: {0}", command);
+            var result = ExecuteCommand(command);
+            if (! result.Success)
+            {
+                throw new ArgumentException($"Cannot export object {obj.NavType} ID {obj.ID}: {result.ErrorMessage}");
+            }
         }
 
     }

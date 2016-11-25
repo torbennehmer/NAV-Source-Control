@@ -52,7 +52,7 @@ namespace NavScm.NavInterface
         partial void OnLoaded()
         {
             Contract.Requires(Company_Name.Length == 0);
-            Contract.Requires(Type >= 0  && Type <= 9 && Type != 2 && Type != 4 );
+            Contract.Requires(Type >= 1  && Type <= 9 && Type != 2 && Type != 4 );
             /*
             if (Company_Name.Length > 0)
                 throw new InvalidOperationException($"The object {CacheKey} holds a variant with the company name {Company_Name}, which is unsupported");
@@ -91,6 +91,27 @@ namespace NavScm.NavInterface
         public DateTime ModifiedDate
         {
             get { return Date.Add(Time.TimeOfDay); }
+        }
+
+        /// <summary>
+        /// Returns a filter string suitable to filter the NAV Object table during finsql operation.
+        /// </summary>
+        /// <returns>Filter-String usable f.x. in ExportObjects.</returns>
+        [Pure]
+        public string GetFilter()
+        {
+            switch(NavType)
+            {
+                case NavObjectType.Codeunit: return $"Type=Codeunit;ID={ID}";
+                case NavObjectType.MenuSuite: return $"Type=MenuSuite;ID={ID}";
+                case NavObjectType.Page: return $"Type=Page;ID={ID}";
+                case NavObjectType.Query: return $"Type=Query;ID={ID}";
+                case NavObjectType.Report: return $"Type=Report;ID={ID}";
+                case NavObjectType.Table: return $"Type=Table;ID={ID}";
+                case NavObjectType.XmlPort: return $"Type=XmlPort;ID={ID}";
+            }
+
+            throw new InvalidOperationException($"The Type {Type} is unknown, cannot convert to filter.");
         }
 
         /// <summary>

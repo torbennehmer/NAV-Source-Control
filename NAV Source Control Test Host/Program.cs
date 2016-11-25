@@ -29,20 +29,20 @@ namespace NavScm.TestHost
             log.InfoFormat("{0} total entries in NavSqlObjects", NavSqlObjects.Count());
 
             var query = from sql in NavSqlObjects
-                        where sql.Modified == 1
+                        where sql.Modified == 1 && sql.Type > 0
                         select sql;
 
             int count = query.Count();
 
-            log.InfoFormat("{0} modified objects detected, reading them...", count);
+            log.InfoFormat("{0} modified objects detected, reading them into the cache...", count);
 
             var foundObjects = new Dictionary<string, NavObject>(count);
 
-            int i = 1;
+            // int i = 1;
             foreach (NavObject o in query)
             {
-                log.DebugFormat("Row {6}/{7}: Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
-                    o.Type, o.ID, o.Name, o.Date.ToShortDateString(), o.Time.ToShortTimeString(), o.Version_List, i++, count);
+                //log.DebugFormat("Row {6}/{7}: Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
+                //    o.Type, o.ID, o.Name, o.Date.ToShortDateString(), o.Time.ToShortTimeString(), o.Version_List, i++, count);
 
                 foundObjects.Add(o.CacheKey, o);
             }
@@ -59,11 +59,20 @@ namespace NavScm.TestHost
             XmlDictionaryReader xmlReader = XmlDictionaryReader.CreateTextReader(reader, new XmlDictionaryReaderQuotas());
             var loadedObjects = (Dictionary<string, NavObject>)serializer.ReadObject(xmlReader, true);
 
-            log.Debug("Dumping sample object 1.82004");
+            // 5.99997 => CU TN_Test
 
-            NavObject o2 = loadedObjects["1.82004"];
+            log.Debug("Dumping sample object descriptor for 5.99997 ");
+
+            NavObject o2 = loadedObjects["5.99997"];
             log.DebugFormat("Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
                 o2.Type, o2.ID, o2.Name, o2.Date.ToShortDateString(), o2.Time.ToShortTimeString(), o2.Version_List);
+
+            DevEnvInterface devenv = new DevEnvInterface("C:\\Program Files (x86)\\Microsoft Dynamics NAV\\tbrt-nav-erp-02\\RoleTailored Client\\finsql.exe",
+                "tbrt-sql-erp-01", "TERRABIT 2015 DEV");
+
+            devenv.Export(loadedObjects["5.80"], $"{Directory.GetCurrentDirectory()}\\CU80.txt");
+            devenv.Export(loadedObjects["5.99997"], $"{Directory.GetCurrentDirectory()}\\CU99997.txt");
+            devenv.Export(loadedObjects["1.13"], $"{Directory.GetCurrentDirectory()}\\TAB13.txt");
 
             log.Info("Shutting down...");
 
