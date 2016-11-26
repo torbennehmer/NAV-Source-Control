@@ -67,12 +67,28 @@ namespace NavScm.TestHost
             log.DebugFormat("Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
                 o2.Type, o2.ID, o2.Name, o2.Date.ToShortDateString(), o2.Time.ToShortTimeString(), o2.Version_List);
 
+            log.Debug("=== Exporting sample objects ===");
+
             DevEnvInterface devenv = new DevEnvInterface("C:\\Program Files (x86)\\Microsoft Dynamics NAV\\tbrt-nav-erp-02\\RoleTailored Client\\finsql.exe",
                 "tbrt-sql-erp-01", "TERRABIT 2015 DEV");
 
             devenv.Export(loadedObjects["5.80"], $"{Directory.GetCurrentDirectory()}\\CU80.txt");
+            devenv.Export(loadedObjects["5.99996"], $"{Directory.GetCurrentDirectory()}\\CU99996.txt");
             devenv.Export(loadedObjects["5.99997"], $"{Directory.GetCurrentDirectory()}\\CU99997.txt");
+            devenv.Export(loadedObjects["5.99998"], $"{Directory.GetCurrentDirectory()}\\CU99998.txt");
             devenv.Export(loadedObjects["1.13"], $"{Directory.GetCurrentDirectory()}\\TAB13.txt");
+
+            //log.Debug("=== Importing TN_WORK ===");
+
+            //o2 = devenv.Import(loadedObjects["5.99997"], $"{Directory.GetCurrentDirectory()}\\CU99997.txt");
+            //log.DebugFormat("Object after import: Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
+            //    o2.Type, o2.ID, o2.Name, o2.Date.ToShortDateString(), o2.Time.ToShortTimeString(), o2.Version_List);
+
+            //log.Debug("=== Compiling TN_WORK ===");
+
+            //o2 = devenv.Compile(loadedObjects["5.99997"]);
+            //log.DebugFormat("Object after compilation: Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
+            //    o2.Type, o2.ID, o2.Name, o2.Date.ToShortDateString(), o2.Time.ToShortTimeString(), o2.Version_List);
 
             log.Info("Shutting down...");
 

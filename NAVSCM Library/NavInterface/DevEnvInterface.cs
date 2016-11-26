@@ -24,6 +24,11 @@ namespace NavScm.NavInterface
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(DevEnvInterface));
 
         /// <summary>
+        /// The Context to use for DB operations.
+        /// </summary>
+        private NavSQLDataContext navSqlContext;
+
+        /// <summary>
         /// Helper structure to capture the full execution result of finsql.exe.
         /// </summary>
         public struct CommandResult
@@ -101,6 +106,8 @@ namespace NavScm.NavInterface
 
             DatabaseServer = databaseServer;
             DatabaseName = databaseName;
+
+            navSqlContext = new NavSQLDataContext($"Data Source=\"{DatabaseServer}\";Initial Catalog=\"{DatabaseName}\";Integrated Security=True");
 
             if (log.IsDebugEnabled)
             {
@@ -260,7 +267,7 @@ namespace NavScm.NavInterface
 
             // TODO: Skip Unlicensed objects?
             string command = $"Command=ExportObjects,File=\"{destinationFileName}\",Filter=\"{obj.GetFilter()}\"";
-            log.DebugFormat("Export: Build command string: {0}", command);
+            log.DebugFormat("Export: Built command string: {0}", command);
             var result = ExecuteCommand(command);
             if (! result.Success)
             {
@@ -268,5 +275,61 @@ namespace NavScm.NavInterface
             }
         }
 
+        /// <summary>
+        /// Imports a given NAV object into the database from the file given. The existing file is overwritten,
+        /// schema changes are executed forcibly, so beware of possible data loss.
+        /// </summary>
+        /// <remarks>
+        /// <para>The file name must end with .txt, as finsql.exe deduces the export format from the destiation files 
+        /// extension (crap). We have no other option here as to play by these rules.</para>
+        /// <para>Be aware, that NAV uses some strange mix of CP850 and CP1252 to encode the text files, 
+        /// this is mean stuff here. The call does not try to convert this into something more sensible
+        /// at this point, especially since the IDE won't be able to handle this properly if you have to
+        /// work with the files manually. Checked with NAV 2015, YMMV.</para></remarks>
+        /// <para>Check http://forum.mibuso.com/discussion/37078/encoding-of-exported-navision-objects-txt-files 
+        /// for further details about this.</para>
+        /// <param name="obj">The NAV object as taken from the SQL database or from the cache (doesn't matter).</param>
+        /// <param name="sourceFileName">The name of the source file. The file name must end with .txt.</param>
+        /// <returns>A new NavObject representing the imported object.</returns>
+        public NavObject Import(NavObject obj, string sourceFileName)
+        {
+            Contract.Requires(obj != null);
+            Contract.Requires(sourceFileName != "");
+            Contract.Requires(Path.GetExtension(sourceFileName) == ".txt");
+
+            // TODO: Skip Unlicensed objects?
+            string command = $"Command=ImportObjects,File=\"{sourceFileName}\",ImportAction=overwrite,SynchronizeSchemaChanges=force";
+            log.DebugFormat("Import: Built command string: {0}", command);
+            var result = ExecuteCommand(command);
+            if (!result.Success)
+            {
+                throw new ArgumentException($"Cannot import object {obj.NavType} ID {obj.ID} from file {sourceFileName}: {result.ErrorMessage}");
+            }
+
+            return navSqlContext.NavObject.Where(o => o.Type == obj.Type && o.ID == obj.ID).First();
+        }
+
+
+        /// <summary>
+        /// Compiles the NavObject given and reloads its object descriptor from the database. Compilation is done with
+        /// forced schema changes, so beware of possible data loss.
+        /// </summary>
+        /// <param name="obj">The NAV object as taken from the SQL database or from the cache (doesn't matter).</param>
+        /// <returns>A new NavObject representing the imported object.</returns>
+        public NavObject Compile(NavObject obj)
+        {
+            Contract.Requires(obj != null);
+
+            // TODO: Skip Unlicensed objects?
+            string command = $"Command=CompileObjects,Filter=\"{obj.GetFilter()}\",SynchronizeSchemaChanges=force";
+            log.DebugFormat("Compile: Built command string: {0}", command);
+            var result = ExecuteCommand(command);
+            if (!result.Success)
+            {
+                throw new ArgumentException($"Cannot compile object {obj.NavType} ID {obj.ID}: {result.ErrorMessage}");
+            }
+
+            return navSqlContext.NavObject.Where(o => o.Type == obj.Type && o.ID == obj.ID).First();
+        }
     }
 }
