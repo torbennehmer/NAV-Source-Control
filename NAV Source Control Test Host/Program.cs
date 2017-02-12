@@ -90,6 +90,9 @@ namespace NavScm.TestHost
             //log.DebugFormat("Object after compilation: Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
             //    o2.Type, o2.ID, o2.Name, o2.Date.ToShortDateString(), o2.Time.ToShortTimeString(), o2.Version_List);
 
+            NavTextObject textObj = new NavTextObject($"{Directory.GetCurrentDirectory()}\\CU80.txt");
+            log.DebugFormat("Loaded CU80.txt:{0}", textObj.ToString());
+
             log.Info("Shutting down...");
 
             Console.ReadLine();
