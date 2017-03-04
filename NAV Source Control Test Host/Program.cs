@@ -59,26 +59,39 @@ namespace NavScm.TestHost
             XmlDictionaryReader xmlReader = XmlDictionaryReader.CreateTextReader(reader, new XmlDictionaryReaderQuotas());
             var loadedObjects = (Dictionary<string, NavObject>)serializer.ReadObject(xmlReader, true);
 
-            // 5.99997 => CU TN_Test
-
-            log.Debug("Dumping sample object descriptor for 5.99997 ");
-
-            NavObject o2 = loadedObjects["5.99997"];
-            log.DebugFormat("Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
-                o2.Type, o2.ID, o2.Name, o2.Date.ToShortDateString(), o2.Time.ToShortTimeString(), o2.Version_List);
-
-            log.Debug("=== Exporting sample objects ===");
-
             DevEnvInterface devenv = new DevEnvInterface("C:\\Program Files (x86)\\Microsoft Dynamics NAV\\tbrt-nav-erp-02\\RoleTailored Client\\finsql.exe",
                 "tbrt-sql-erp-01", "TERRABIT 2015 DEV");
 
-            devenv.Export(loadedObjects["5.80"], $"{Directory.GetCurrentDirectory()}\\CU80.txt");
-            devenv.Export(loadedObjects["5.99996"], $"{Directory.GetCurrentDirectory()}\\CU99996.txt");
-            devenv.Export(loadedObjects["5.99997"], $"{Directory.GetCurrentDirectory()}\\CU99997.txt");
-            devenv.Export(loadedObjects["5.99998"], $"{Directory.GetCurrentDirectory()}\\CU99998.txt");
-            devenv.Export(loadedObjects["1.13"], $"{Directory.GetCurrentDirectory()}\\TAB13.txt");
+            log.Info($"Exporting {foundObjects.Count} Objects...");
+            foreach (var entry in loadedObjects)
+            {
+                string dirname = entry.Value.NavType.ToString();
+                if (!Directory.Exists(dirname))
+                {
+                    log.Info($"Directory {dirname} does not exist, creating...");
+                    Directory.CreateDirectory(dirname);
+                }
+                log.Info($"Exporting {entry.Value.ToString()} to {entry.Value.FileName}");
+                devenv.Export(entry.Value, $"{Directory.GetCurrentDirectory()}\\Working Copy\\{entry.Value.FileName}");
+            }
 
-            //log.Debug("=== Importing TN_WORK ===");
+            // 5.99997 => CU TN_Test
+
+            //log.Debug("Dumping sample object descriptor for 5.99997 ");
+
+            //NavObject o2 = loadedObjects["5.99997"];
+            //log.DebugFormat("Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}, FileName {6}",
+            //    o2.Type, o2.ID, o2.Name, o2.Date.ToShortDateString(), o2.Time.ToShortTimeString(), o2.Version_List, o2.FileName);
+
+            //log.Debug("=== Exporting sample objects ===");
+
+            //devenv.Export(loadedObjects["5.80"], $"{Directory.GetCurrentDirectory()}\\CU80.txt");
+            //devenv.Export(loadedObjects["5.99996"], $"{Directory.GetCurrentDirectory()}\\CU99996.txt");
+            //devenv.Export(loadedObjects["5.99997"], $"{Directory.GetCurrentDirectory()}\\CU99997.txt");
+            //devenv.Export(loadedObjects["5.99998"], $"{Directory.GetCurrentDirectory()}\\CU99998.txt");
+            //devenv.Export(loadedObjects["1.13"], $"{Directory.GetCurrentDirectory()}\\TAB13.txt");
+
+            ////log.Debug("=== Importing TN_WORK ===");
 
             //o2 = devenv.Import(loadedObjects["5.99997"], $"{Directory.GetCurrentDirectory()}\\CU99997.txt");
             //log.DebugFormat("Object after import: Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
@@ -90,8 +103,8 @@ namespace NavScm.TestHost
             //log.DebugFormat("Object after compilation: Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
             //    o2.Type, o2.ID, o2.Name, o2.Date.ToShortDateString(), o2.Time.ToShortTimeString(), o2.Version_List);
 
-            NavTextObject textObj = new NavTextObject($"{Directory.GetCurrentDirectory()}\\CU80.txt");
-            log.DebugFormat("Loaded CU80.txt:{0}", textObj.ToString());
+            //NavTextObject textObj = new NavTextObject($"{Directory.GetCurrentDirectory()}\\CU80.txt");
+            //log.DebugFormat("Loaded CU80.txt:{0}", textObj.ToString());
 
             log.Info("Shutting down...");
 
