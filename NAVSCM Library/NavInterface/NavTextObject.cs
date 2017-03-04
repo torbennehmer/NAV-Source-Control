@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace NavScm.NavInterface
 {
@@ -149,7 +150,7 @@ namespace NavScm.NavInterface
         /// <param name="tmp">A line taking the form (whitespace)(propertyname)=(propertyvalue)</param>
         private void ParseObjectPropertyLine(string line)
         {
-            Match m = Regex.Match(line, @"^    ([^=]+)=(.*)$");
+            Match m = Regex.Match(line, @"^    ([^=]+)=(.*);$");
             if (!m.Success || m.Groups.Count != 3)
                 throw new InvalidDataException($"File {FileName} is not a valid NAV text file, a property line is invalid.");
 
@@ -173,15 +174,15 @@ namespace NavScm.NavInterface
             if (!ObjectProperties.ContainsKey("date"))
                 throw new InvalidDataException("Key 'date' not found in Object Properties.");
 
-            // TODO DOES NOT WORK, check how to parse this correctly!
-            DateTime tmpDate = DateTime.Parse(ObjectProperties["date"]);
-            if (! DateTime.TryParse(ObjectProperties["date"], out tmpDate))
+            // TODO: No idea, how this behaves in an international environment. Can't be the solution to hardcode this.
+            DateTime tmpDate;
+            if (! DateTime.TryParseExact(ObjectProperties["date"], "dd.MM.yy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out tmpDate))
                 throw new InvalidDataException($"Could not parse value '{ObjectProperties["date"]}' of key 'date' into a DateTime.");
             Date = tmpDate;
-            
+
             if (!ObjectProperties.ContainsKey("time"))
                 throw new InvalidDataException("Key 'time' not found in Object Properties.");
-            if (!DateTime.TryParse(ObjectProperties["time"], out tmpDate))
+            if (!DateTime.TryParseExact(ObjectProperties["time"], "HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out tmpDate))
                 throw new InvalidDataException($"Could not parse value '{ObjectProperties["time"]}' of key 'time' into a DateTime.");
             Time = tmpDate;
 
