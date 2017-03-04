@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Diagnostics.Contracts;
 
@@ -94,6 +95,28 @@ namespace NavScm.NavInterface
         }
 
         /// <summary>
+        /// Removes / Replaces all characters in the object name that are not file system compatible with
+        /// underscores, so that it can be used while exporting.
+        /// </summary>
+        public string SantizedObjectName
+        {
+            get
+            {
+                return Regex.Replace(Name, "[:?\\/]", "_", RegexOptions.Compiled);
+            }
+        }
+
+        /// <summary>
+        /// Create the file name to be written on disk based on the object
+        /// </summary>
+        public string FileName
+        {
+            get {
+                return $"{NavType.ToString()}\\{ID.ToString()} - {SantizedObjectName}.txt";
+            }
+        }
+
+        /// <summary>
         /// Returns a filter string suitable to filter the NAV Object table during finsql operation.
         /// </summary>
         /// <returns>Filter-String usable f.x. in ExportObjects.</returns>
@@ -165,6 +188,10 @@ namespace NavScm.NavInterface
             if (!(obj is NavObject))
                 throw new InvalidOperationException("obj is not an NavObject");
             return this.CompareTo((NavObject)obj);
+        }
+        public override string ToString()
+        {
+            return $"{NavType} {ID}: {Name}, Modified={ModifiedDate}, VersionList={Version_List}";
         }
     }
 }
