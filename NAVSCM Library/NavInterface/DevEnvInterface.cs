@@ -227,8 +227,7 @@ namespace NavScm.NavInterface
             else
             {
                 result = new CommandResult(process.ExitCode, true, File.ReadAllText(commandOutput, finsqlEncoding), "");
-                log.Info("ExecuteCommand: Command executed successfully");
-                log.DebugFormat("ExecuteCommand: Command result: {0}", result.CommandOutput);
+                log.DebugFormat("ExecuteCommand successful: Command result: {0}", result.CommandOutput);
             }
 
             // Do some cleanup and be done with it.
