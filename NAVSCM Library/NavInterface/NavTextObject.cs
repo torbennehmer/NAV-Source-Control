@@ -10,9 +10,9 @@ using System.Globalization;
 
 namespace NavScm.NavInterface
 {
-    public class NavTextObject : IEquatable<NavTextObject>, IComparable, IComparable<NavTextObject>
+    public class NavFileObject : IEquatable<NavFileObject>, IComparable, IComparable<NavFileObject>
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(NavTextObject));
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(NavFileObject));
         private Dictionary<string, string> ObjectProperties = new Dictionary<string, string>();
 
         public int ID { get; private set; }
@@ -31,7 +31,7 @@ namespace NavScm.NavInterface
 
         public string FileName { get; private set; }
 
-        public NavTextObject(string fileNameToLoad)
+        public NavFileObject(string fileNameToLoad)
         {
             FileName = fileNameToLoad;
             ParseFile();
@@ -235,17 +235,17 @@ namespace NavScm.NavInterface
 
         public override bool Equals(object obj)
         {
-            if (!(obj is NavTextObject)) return false;
-            return Equals((NavTextObject)obj);
+            if (!(obj is NavFileObject)) return false;
+            return Equals((NavFileObject)obj);
         }
 
-        public bool Equals(NavTextObject other)
+        public bool Equals(NavFileObject other)
         {
             return Type == other.Type
                 && ID == other.ID;
         }
 
-        public int CompareTo(NavTextObject other)
+        public int CompareTo(NavFileObject other)
         {
             if (Type < other.Type)
                 return -1;
@@ -260,9 +260,9 @@ namespace NavScm.NavInterface
 
         public int CompareTo(object obj)
         {
-            if (!(obj is NavTextObject))
+            if (!(obj is NavFileObject))
                 throw new InvalidOperationException("obj is not an NavTextObject");
-            return this.CompareTo((NavTextObject)obj);
+            return this.CompareTo((NavFileObject)obj);
         }
         /// <summary>
         /// Converts the Date and Time fields to a combined Date/Time value.

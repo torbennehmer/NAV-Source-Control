@@ -43,9 +43,9 @@ namespace NavScm.NavInterface
     /// </summary>
     /// <seealso cref="NavSQLDataContext"/>
     /// <seealso cref="NavObjectType"/>
-    partial class NavObject : IEquatable<NavObject>, IComparable, IComparable<NavObject>
+    partial class NavDBObject : IEquatable<NavDBObject>, IComparable, IComparable<NavDBObject>
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(NavObject));
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(NavDBObject));
 
         /// <summary>
         /// Validate restrictions on supported objects as outlined in the class description.
@@ -160,17 +160,17 @@ namespace NavScm.NavInterface
 
         public override bool Equals(object obj)
         {
-            if (!(obj is NavObject)) return false;
-            return Equals((NavObject) obj);
+            if (!(obj is NavDBObject)) return false;
+            return Equals((NavDBObject) obj);
         }
 
-        public bool Equals(NavObject other)
+        public bool Equals(NavDBObject other)
         {
             return Type == other.Type
                 && ID == other.ID;
         }
 
-        public int CompareTo(NavObject other)
+        public int CompareTo(NavDBObject other)
         {
             if (Type < other.Type)
                 return -1;
@@ -185,9 +185,9 @@ namespace NavScm.NavInterface
 
         public int CompareTo(object obj)
         {
-            if (!(obj is NavObject))
+            if (!(obj is NavDBObject))
                 throw new InvalidOperationException("obj is not an NavObject");
-            return this.CompareTo((NavObject)obj);
+            return this.CompareTo((NavDBObject)obj);
         }
         public override string ToString()
         {

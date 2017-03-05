@@ -258,7 +258,7 @@ namespace NavScm.NavInterface
         /// for further details about this.</para>
         /// <param name="obj">The NAV object as taken from the SQL database or from the cache (doesn't matter).</param>
         /// <param name="destinationFileName">The name of the destination file. The file name must end with .txt.</param>
-        public void Export(NavObject obj, string destinationFileName)
+        public void Export(NavDBObject obj, string destinationFileName)
         {
             Contract.Requires(obj != null);
             Contract.Requires(destinationFileName != "");
@@ -290,7 +290,7 @@ namespace NavScm.NavInterface
         /// <param name="obj">The NAV object as taken from the SQL database or from the cache (doesn't matter).</param>
         /// <param name="sourceFileName">The name of the source file. The file name must end with .txt.</param>
         /// <returns>A new NavObject representing the imported object.</returns>
-        public NavObject Import(NavObject obj, string sourceFileName)
+        public NavDBObject Import(NavDBObject obj, string sourceFileName)
         {
             Contract.Requires(obj != null);
             Contract.Requires(sourceFileName != "");
@@ -305,7 +305,7 @@ namespace NavScm.NavInterface
                 throw new ArgumentException($"Cannot import object {obj.NavType} ID {obj.ID} from file {sourceFileName}: {result.ErrorMessage}");
             }
 
-            return navSqlContext.NavObject.Where(o => o.Type == obj.Type && o.ID == obj.ID).First();
+            return navSqlContext.NavDBObject.Where(o => o.Type == obj.Type && o.ID == obj.ID).First();
         }
 
 
@@ -315,7 +315,7 @@ namespace NavScm.NavInterface
         /// </summary>
         /// <param name="obj">The NAV object as taken from the SQL database or from the cache (doesn't matter).</param>
         /// <returns>A new NavObject representing the imported object.</returns>
-        public NavObject Compile(NavObject obj)
+        public NavDBObject Compile(NavDBObject obj)
         {
             Contract.Requires(obj != null);
 
@@ -328,7 +328,7 @@ namespace NavScm.NavInterface
                 throw new ArgumentException($"Cannot compile object {obj.NavType} ID {obj.ID}: {result.ErrorMessage}");
             }
 
-            return navSqlContext.NavObject.Where(o => o.Type == obj.Type && o.ID == obj.ID).First();
+            return navSqlContext.NavDBObject.Where(o => o.Type == obj.Type && o.ID == obj.ID).First();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace NavScm.TestHost
             log.Info("Starting up...");
 
             var context = new NavSQLDataContext("Data Source=tbrt-sql-erp-01;Initial Catalog=\"TERRABIT 2015 DEV\";Integrated Security=True");
-            var NavSqlObjects = context.NavObject;
+            var NavSqlObjects = context.NavDBObject;
 
             log.InfoFormat("{0} total entries in NavSqlObjects", NavSqlObjects.Count());
 
@@ -36,10 +36,10 @@ namespace NavScm.TestHost
 
             log.InfoFormat("{0} modified objects detected, reading them into the cache...", count);
 
-            var foundObjects = new Dictionary<string, NavObject>(count);
+            var foundObjects = new Dictionary<string, NavDBObject>(count);
 
             // int i = 1;
-            foreach (NavObject o in query)
+            foreach (NavDBObject o in query)
             {
                 //log.DebugFormat("Row {6}/{7}: Type {0}, ID {1}, Name {2}, Modified {3} {4}, Version {5}",
                 //    o.Type, o.ID, o.Name, o.Date.ToShortDateString(), o.Time.ToShortTimeString(), o.Version_List, i++, count);
@@ -50,14 +50,14 @@ namespace NavScm.TestHost
             log.InfoFormat("Collection has {0} entries, writing to cache.xml", foundObjects.Count);
 
             FileStream writer = new FileStream("cache.xml", FileMode.Create);
-            DataContractSerializer serializer = new DataContractSerializer(typeof(Dictionary<string, NavObject>));
+            DataContractSerializer serializer = new DataContractSerializer(typeof(Dictionary<string, NavDBObject>));
             serializer.WriteObject(writer, foundObjects);
             writer.Close();
 
             log.Info("Reloading these entries");
             FileStream reader = new FileStream("cache.xml", FileMode.Open);
             XmlDictionaryReader xmlReader = XmlDictionaryReader.CreateTextReader(reader, new XmlDictionaryReaderQuotas());
-            var loadedObjects = (Dictionary<string, NavObject>)serializer.ReadObject(xmlReader, true);
+            var loadedObjects = (Dictionary<string, NavDBObject>)serializer.ReadObject(xmlReader, true);
 
             DevEnvInterface devenv = new DevEnvInterface("C:\\Program Files (x86)\\Microsoft Dynamics NAV\\tbrt-nav-erp-02\\RoleTailored Client\\finsql.exe",
                 "tbrt-sql-erp-01", "TERRABIT 2015 DEV");

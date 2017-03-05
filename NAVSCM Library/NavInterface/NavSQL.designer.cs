@@ -31,9 +31,9 @@ namespace NavScm.NavInterface
 		
     #region Definitionen der Erweiterungsmethoden
     partial void OnCreated();
-    partial void InsertNavObject(NavObject instance);
-    partial void UpdateNavObject(NavObject instance);
-    partial void DeleteNavObject(NavObject instance);
+    partial void InsertNavDBObject(NavDBObject instance);
+    partial void UpdateNavDBObject(NavDBObject instance);
+    partial void DeleteNavDBObject(NavDBObject instance);
     #endregion
 		
 		public NavSQLDataContext(string connection) : 
@@ -60,18 +60,18 @@ namespace NavScm.NavInterface
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<NavObject> NavObject
+		public System.Data.Linq.Table<NavDBObject> NavDBObject
 		{
 			get
 			{
-				return this.GetTable<NavObject>();
+				return this.GetTable<NavDBObject>();
 			}
 		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Object")]
 	[global::System.Runtime.Serialization.DataContractAttribute()]
-	public partial class NavObject : INotifyPropertyChanging, INotifyPropertyChanged
+	public partial class NavDBObject : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -130,7 +130,7 @@ namespace NavScm.NavInterface
     partial void OnLocked_ByChanged();
     #endregion
 		
-		public NavObject()
+		public NavDBObject()
 		{
 			this.Initialize();
 		}

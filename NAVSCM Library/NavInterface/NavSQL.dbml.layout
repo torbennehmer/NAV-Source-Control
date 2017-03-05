@@ -3,7 +3,7 @@
   <DataContextMoniker Name="/NavSQLDataContext" />
   <nestedChildShapes>
     <classShape Id="8c6e51fb-7d5f-4746-8740-0eda298f32a6" absoluteBounds="1.875, 0.75, 2, 3.1170068359375">
-      <DataClassMoniker Name="/NavSQLDataContext/NavObject" />
+      <DataClassMoniker Name="/NavSQLDataContext/NavDBObject" />
       <nestedChildShapes>
         <elementListCompartment Id="4da92c62-b2ce-4bc2-9a36-eba03eac978d" absoluteBounds="1.8900000000000001, 1.21, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
