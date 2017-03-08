@@ -27,6 +27,17 @@ namespace NavScm.NavInterface
         #region ##### CONFIG OPTIONS 
 
         /// <summary>
+        /// Current cache format version number.
+        /// </summary>
+        private const int CurrentVersion = 1;
+
+        /// <summary>
+        /// Version number of the cache, required in case of updates of existing caches to new formats.
+        /// </summary>
+        [DataMember (IsRequired = true, Name = "Version")]
+        private int Version;
+
+        /// <summary>
         /// Identifier for the connection, which is used in all locations to bring things like
         /// the object state cache etc. together.
         /// </summary>
@@ -119,13 +130,19 @@ namespace NavScm.NavInterface
             Contract.Ensures(databaseServer == DatabaseServer);
             Contract.Ensures(devEnvPath == DevEnvPath);
             Contract.Ensures(name == Name);
+            Contract.Ensures(Version == CurrentVersion);
+
+            Version = CurrentVersion;
 
             Name = name;
             DevEnvPath = devEnvPath;
             DatabaseServer = databaseServer;
             DatabaseName = databaseName;
             WCBasePath = wcBasePath;
+
             UpdateConnectionString();
+            InitEFContext();
+            InitDevEnvInterface();
         }
 
         /// <summary>
@@ -179,7 +196,28 @@ namespace NavScm.NavInterface
         [OnDeserialized]
         protected void DeserializationComplete(StreamingContext sc)
         {
-            // TODO
+            Contract.Ensures(Version == CurrentVersion);
+
+            try
+            {
+                if (DatabaseName == "")
+                    throw new InvalidDataException($"The Database Name setting is empty, working copy cache is invalid.");
+                if (DatabaseServer == "")
+                    throw new InvalidDataException($"The Database Server setting is empty, working copy cache is invalid.");
+                if (DevEnvPath == "")
+                    throw new InvalidDataException($"The finsql.exe path setting is empty, working copy cache is invalid.");
+                if (!File.Exists(DevEnvPath))
+                    throw new InvalidDataException($"The DevEnv Path {DevEnvPath} could not be found, working copy cache is invalid.");
+
+                UpdateConnectionString();
+                InitEFContext();
+                InitDevEnvInterface();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                log.Debug(ex);
+            }
         }
 
         #endregion
