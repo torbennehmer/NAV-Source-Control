@@ -65,7 +65,7 @@ namespace NavScm.TestHost
             log.Info($"Exporting {foundObjects.Count} Objects...");
             foreach (var entry in loadedObjects)
             {
-                string dirname = entry.Value.NavType.ToString();
+                string dirname = $"{Directory.GetCurrentDirectory()}\\Working Copy\\{entry.Value.NavType.ToString()}";
                 if (!Directory.Exists(dirname))
                 {
                     log.Info($"Directory {dirname} does not exist, creating...");
