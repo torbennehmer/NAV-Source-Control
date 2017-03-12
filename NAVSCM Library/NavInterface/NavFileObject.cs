@@ -128,8 +128,7 @@ namespace NavScm.NavInterface
                     throw new InvalidDataException($"File {FileName} contains the unsupported object type {m.Groups[1].Value}.");
             }
 
-            int id;
-            if (! Int32.TryParse(m.Groups[2].Value, out id))
+            if (!Int32.TryParse(m.Groups[2].Value, out int id))
                 throw new InvalidDataException($"File {FileName} contains an invalid ID {m.Groups[2].Value}.");
             ID = id;
 
@@ -175,8 +174,7 @@ namespace NavScm.NavInterface
                 throw new InvalidDataException("Key 'date' not found in Object Properties.");
 
             // TODO: No idea, how this behaves in an international environment. Can't be the solution to hardcode this.
-            DateTime tmpDate;
-            if (! DateTime.TryParseExact(ObjectProperties["date"], "dd.MM.yy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out tmpDate))
+            if (!DateTime.TryParseExact(ObjectProperties["date"], "dd.MM.yy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime tmpDate))
                 throw new InvalidDataException($"Could not parse value '{ObjectProperties["date"]}' of key 'date' into a DateTime.");
             Date = tmpDate;
 
