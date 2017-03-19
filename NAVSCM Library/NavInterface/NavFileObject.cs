@@ -15,13 +15,23 @@ namespace NavScm.NavInterface
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(NavFileObject));
         private Dictionary<string, string> ObjectProperties = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Filename of the textfile which has been loaded into memory.
+        /// </summary>
         public string FileName { get; private set; }
 
+        /// <summary>
+        /// Constructs an object based on an actual file in the filesystem. This immediately calls into
+        /// the parser and may throw exceptions.
+        /// </summary>
+        /// <param name="fileNameToLoad">The full path of the object to load.</param>
         public NavFileObject(string fileNameToLoad)
         {
             FileName = fileNameToLoad;
             ParseFile();
         }
+
+        #region ------ PARSER CODE ------
 
         /// <summary>
         /// Parses the complete file header (OBJECT heading line and the following OBJECT-PROPERTIES.
@@ -174,6 +184,8 @@ namespace NavScm.NavInterface
                 throw new InvalidDataException("Key 'version list' not found in Object Properties.");
             VersionList = ObjectProperties["version list"];
         }
+
+        #endregion
 
         public bool Equals(NavFileObject other)
         {

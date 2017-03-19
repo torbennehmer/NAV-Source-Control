@@ -9,6 +9,21 @@ using System.Diagnostics.Contracts;
 namespace NavScm.NavInterface
 {
     /// <summary>
+    /// Adds a mapping between the NAV SQL Type field an enum to make its handling easier.
+    /// </summary>
+    public enum NavObjectType
+    {
+        TableData = 0,
+        Table = 1,
+        Report = 3,
+        Codeunit = 5,
+        XmlPort = 6,
+        MenuSuite = 7,
+        Page = 8,
+        Query = 9
+    }
+
+    /// <summary>
     /// Base class to collect all basic helper functions related to all representations 
     /// of NAV objects, both database, file and cached objects. Acts as a tool to factor
     /// out all base code common to all three representations.

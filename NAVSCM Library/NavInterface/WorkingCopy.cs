@@ -24,7 +24,7 @@ namespace NavScm.NavInterface
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(WorkingCopy));
 
-        #region ##### CONFIG OPTIONS 
+        #region ------ CONFIG OPTIONS ------
 
         /// <summary>
         /// Current cache format version number.
@@ -90,7 +90,7 @@ namespace NavScm.NavInterface
         #endregion
 
 
-        #region ##### GENERAL RUNTIME STATE
+        #region ------ GENERAL RUNTIME STATE ------
 
         /// <summary>
         /// The default data context connection to the NAV Database.
@@ -109,7 +109,7 @@ namespace NavScm.NavInterface
 
         #endregion
 
-        #region ##### CONSTRUCTION AND INITIALIZATION
+        #region ------ CONSTRUCTION AND INITIALIZATION ------
 
         /// <summary>
         /// Standard explicit constructor, works on an explicit set of configuration options.
@@ -187,7 +187,7 @@ namespace NavScm.NavInterface
         #endregion
 
 
-        #region ##### SERIALIZATION INTERFACE
+        #region ------ SERIALIZATION INTERFACE ------
 
         /// <summary>
         /// Called after deserialization, re-initializes the complete runtime state.
