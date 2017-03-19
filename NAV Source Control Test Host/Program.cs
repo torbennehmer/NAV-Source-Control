@@ -29,7 +29,7 @@ namespace NavScm.TestHost
             log.InfoFormat("{0} total entries in NavSqlObjects", NavSqlObjects.Count());
 
             var query = from sql in NavSqlObjects
-                        where sql.Modified == 1 && sql.Type > 0
+                        where sql.IsModified == 1 && sql.Type > 0
                         select sql;
 
             int count = query.Count();
@@ -49,6 +49,7 @@ namespace NavScm.TestHost
 
             log.InfoFormat("Collection has {0} entries, writing to cache.xml", foundObjects.Count);
 
+            /*
             FileStream writer = new FileStream("cache.xml", FileMode.Create);
             DataContractSerializer serializer = new DataContractSerializer(typeof(Dictionary<string, NavDBObject>));
             serializer.WriteObject(writer, foundObjects);
@@ -58,6 +59,8 @@ namespace NavScm.TestHost
             FileStream reader = new FileStream("cache.xml", FileMode.Open);
             XmlDictionaryReader xmlReader = XmlDictionaryReader.CreateTextReader(reader, new XmlDictionaryReaderQuotas());
             var loadedObjects = (Dictionary<string, NavDBObject>)serializer.ReadObject(xmlReader, true);
+            */
+            var loadedObjects = foundObjects;
 
             DevEnvInterface devenv = new DevEnvInterface("C:\\Program Files (x86)\\Microsoft Dynamics NAV\\tbrt-nav-erp-02\\RoleTailored Client\\finsql.exe",
                 "tbrt-sql-erp-01", "TERRABIT 2015 DEV");
@@ -71,8 +74,8 @@ namespace NavScm.TestHost
                     log.Info($"Directory {dirname} does not exist, creating...");
                     Directory.CreateDirectory(dirname);
                 }
-                log.Info($"Exporting {entry.Value.ToString()} to {entry.Value.FileName}");
-                devenv.Export(entry.Value, $"{Directory.GetCurrentDirectory()}\\Working Copy\\{entry.Value.FileName}");
+                log.Info($"Exporting {entry.Value.ToString()} to {entry.Value.RelativeFileName}");
+                devenv.Export(entry.Value, $"{Directory.GetCurrentDirectory()}\\Working Copy\\{entry.Value.RelativeFileName}");
             }
 
             // 5.99997 => CU TN_Test

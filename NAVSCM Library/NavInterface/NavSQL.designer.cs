@@ -108,26 +108,26 @@ namespace NavScm.NavInterface
     partial void OntimestampChanged();
     partial void OnTypeChanging(int value);
     partial void OnTypeChanged();
-    partial void OnCompany_NameChanging(string value);
-    partial void OnCompany_NameChanged();
+    partial void OnCompanyNameChanging(string value);
+    partial void OnCompanyNameChanged();
     partial void OnIDChanging(int value);
     partial void OnIDChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
-    partial void OnModifiedChanging(byte value);
-    partial void OnModifiedChanged();
-    partial void OnCompiledChanging(byte value);
-    partial void OnCompiledChanged();
-    partial void OnDateChanging(System.DateTime value);
-    partial void OnDateChanged();
-    partial void OnTimeChanging(System.DateTime value);
-    partial void OnTimeChanged();
-    partial void OnVersion_ListChanging(string value);
-    partial void OnVersion_ListChanged();
+    partial void OnIsModifiedChanging(byte value);
+    partial void OnIsModifiedChanged();
+    partial void OnIsCompiledChanging(byte value);
+    partial void OnIsCompiledChanged();
+    partial void OnModifiedDateChanging(System.DateTime value);
+    partial void OnModifiedDateChanged();
+    partial void OnModifiedTimeChanging(System.DateTime value);
+    partial void OnModifiedTimeChanged();
+    partial void OnVersionListChanging(string value);
+    partial void OnVersionListChanged();
     partial void OnLockedChanging(byte value);
     partial void OnLockedChanged();
-    partial void OnLocked_ByChanging(string value);
-    partial void OnLocked_ByChanged();
+    partial void OnLockedByChanging(string value);
+    partial void OnLockedByChanged();
     #endregion
 		
 		public NavDBObject()
@@ -158,7 +158,7 @@ namespace NavScm.NavInterface
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="Int NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-		public int Type
+		public override int Type
 		{
 			get
 			{
@@ -179,7 +179,7 @@ namespace NavScm.NavInterface
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Company Name]", Storage="_Company_Name", DbType="VarChar(30) NOT NULL", CanBeNull=false, IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
-		public string Company_Name
+		public string CompanyName
 		{
 			get
 			{
@@ -189,18 +189,18 @@ namespace NavScm.NavInterface
 			{
 				if ((this._Company_Name != value))
 				{
-					this.OnCompany_NameChanging(value);
+					this.OnCompanyNameChanging(value);
 					this.SendPropertyChanging();
 					this._Company_Name = value;
-					this.SendPropertyChanged("Company_Name");
-					this.OnCompany_NameChanged();
+					this.SendPropertyChanged("CompanyName");
+					this.OnCompanyNameChanged();
 				}
 			}
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
-		public int ID
+		public override int ID
 		{
 			get
 			{
@@ -221,7 +221,7 @@ namespace NavScm.NavInterface
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(30) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
-		public string Name
+		public override string Name
 		{
 			get
 			{
@@ -240,9 +240,9 @@ namespace NavScm.NavInterface
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Modified", DbType="TinyInt NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Modified", Storage="_Modified", DbType="TinyInt NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
-		public byte Modified
+		public byte IsModified
 		{
 			get
 			{
@@ -252,18 +252,18 @@ namespace NavScm.NavInterface
 			{
 				if ((this._Modified != value))
 				{
-					this.OnModifiedChanging(value);
+					this.OnIsModifiedChanging(value);
 					this.SendPropertyChanging();
 					this._Modified = value;
-					this.SendPropertyChanged("Modified");
-					this.OnModifiedChanged();
+					this.SendPropertyChanged("IsModified");
+					this.OnIsModifiedChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Compiled", DbType="TinyInt NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Compiled", Storage="_Compiled", DbType="TinyInt NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
-		public byte Compiled
+		public byte IsCompiled
 		{
 			get
 			{
@@ -273,18 +273,18 @@ namespace NavScm.NavInterface
 			{
 				if ((this._Compiled != value))
 				{
-					this.OnCompiledChanging(value);
+					this.OnIsCompiledChanging(value);
 					this.SendPropertyChanging();
 					this._Compiled = value;
-					this.SendPropertyChanged("Compiled");
-					this.OnCompiledChanged();
+					this.SendPropertyChanged("IsCompiled");
+					this.OnIsCompiledChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Date", DbType="DateTime NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Date", Storage="_Date", DbType="DateTime NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=8)]
-		public System.DateTime Date
+		public override System.DateTime ModifiedDate
 		{
 			get
 			{
@@ -294,18 +294,18 @@ namespace NavScm.NavInterface
 			{
 				if ((this._Date != value))
 				{
-					this.OnDateChanging(value);
+					this.OnModifiedDateChanging(value);
 					this.SendPropertyChanging();
 					this._Date = value;
-					this.SendPropertyChanged("Date");
-					this.OnDateChanged();
+					this.SendPropertyChanged("ModifiedDate");
+					this.OnModifiedDateChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Time", DbType="DateTime NOT NULL", UpdateCheck=UpdateCheck.Never)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Time", Storage="_Time", DbType="DateTime NOT NULL", UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=9)]
-		public System.DateTime Time
+		public override System.DateTime ModifiedTime
 		{
 			get
 			{
@@ -315,18 +315,18 @@ namespace NavScm.NavInterface
 			{
 				if ((this._Time != value))
 				{
-					this.OnTimeChanging(value);
+					this.OnModifiedTimeChanging(value);
 					this.SendPropertyChanging();
 					this._Time = value;
-					this.SendPropertyChanged("Time");
-					this.OnTimeChanged();
+					this.SendPropertyChanged("ModifiedTime");
+					this.OnModifiedTimeChanged();
 				}
 			}
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Version List]", Storage="_Version_List", DbType="VarChar(248) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=10)]
-		public string Version_List
+		public override string VersionList
 		{
 			get
 			{
@@ -336,11 +336,11 @@ namespace NavScm.NavInterface
 			{
 				if ((this._Version_List != value))
 				{
-					this.OnVersion_ListChanging(value);
+					this.OnVersionListChanging(value);
 					this.SendPropertyChanging();
 					this._Version_List = value;
-					this.SendPropertyChanged("Version_List");
-					this.OnVersion_ListChanged();
+					this.SendPropertyChanged("VersionList");
+					this.OnVersionListChanged();
 				}
 			}
 		}
@@ -368,7 +368,7 @@ namespace NavScm.NavInterface
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Locked By]", Storage="_Locked_By", DbType="VarChar(132) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=12)]
-		public string Locked_By
+		public string LockedBy
 		{
 			get
 			{
@@ -378,11 +378,11 @@ namespace NavScm.NavInterface
 			{
 				if ((this._Locked_By != value))
 				{
-					this.OnLocked_ByChanging(value);
+					this.OnLockedByChanging(value);
 					this.SendPropertyChanging();
 					this._Locked_By = value;
-					this.SendPropertyChanged("Locked_By");
-					this.OnLocked_ByChanged();
+					this.SendPropertyChanged("LockedBy");
+					this.OnLockedByChanged();
 				}
 			}
 		}
