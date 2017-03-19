@@ -97,7 +97,7 @@
   <ItemGroup>
     <Compile Include="NavInterface\DevEnvInterface.cs" />
     <Compile Include="NavInterface\NavBaseObject.cs" />
-    <Compile Include="NavInterface\NavObject.cs" />
+    <Compile Include="NavInterface\NavCacheObject.cs" />
     <Compile Include="NavInterface\NavSQL.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

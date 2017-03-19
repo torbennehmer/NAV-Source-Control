@@ -51,7 +51,7 @@ namespace NavScm.NavInterface
     /// inconsistent states for the same object ID for example during renames. The Working Copy
     /// and repository change handlers will take care of this.</para>
     /// </summary>
-    public class NavObject : NavBaseObject
+    public class NavCacheObject : NavBaseObject
     {
 
         /// <summary>
